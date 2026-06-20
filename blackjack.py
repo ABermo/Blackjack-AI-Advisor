@@ -10,6 +10,7 @@ decks = 1
 cards = deck(decks)
 
 
+
 # Scoring
 
 SCORING = {
@@ -33,3 +34,12 @@ def convert(hand):
         hand[card] = SCORING[hand[card]]
     
     return hand
+
+
+
+# Seen Cards
+
+def remove_seen(hand, cards):
+    for card in hand:
+        cards.pop(cards.index(card))
+
