@@ -21,6 +21,7 @@ VALUES = {
 }
 
 players = {}
+alive = True
 
 
 
@@ -75,8 +76,52 @@ def display(id):
     else:
         print(f"While the dealer is currently showing a {players[-1]['c1']}")
 
+
+
+def bust_check(id):
+    global alive
+    if (players[id]["score"] > 21):
+        print("You've gone over 21 and have lost on this hand")
+        alive = False
+
+
+def hit(id):
+    print("You have chosen to hit")
+    
+    # Draw a random card
+    i = r.randint(0, len(game_set) - 1)
+    c = game_set[i]
+    game_set.pop(i)
+    
+    print(f"You have a drawn a {c}")
+    
+    j = "c" + str(len(players[id]))
+    players[id][j] = c
+    
+    score_hand(id)
+    
+    print(f"This now puts your score at {players[id]['score']}")
+    bust_check(id)
+
+
+
+def action_input(id):
+    display(id)
+    print("What would you like to do:")
+    print("1. Hit")
+    print("2. Stick")
+    
+    action = input()
+    
+    if (action.strip().lower() in ('1', '1.', 'h', 'hit')):
+        hit(id)
+        if alive:
+            display(id)
+
 player = 1
 dealer = -1 # Dealer will always be -1
 deal_hand(player)
 deal_hand(dealer)
-display(player)
+
+while alive:
+    action_input(player)
