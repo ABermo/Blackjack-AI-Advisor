@@ -22,6 +22,8 @@ VALUES = {
 
 players = {}
 
+
+
 def score_hand(id):
     score = 0
     aces = 0
@@ -31,7 +33,7 @@ def score_hand(id):
         score += VALUES[players[id][i]]
         
         if (players[id][i] == 'A'):
-            aces += 1
+            aces += 1 # Counting Aces so if player goes over 21, we can take away 10
     
     while(score > 21 and aces > 0):
         score -= 10
@@ -39,12 +41,14 @@ def score_hand(id):
         
     players[id]["score"] = score
 
+
+
 def deal_hand(id):
-    i = r.randint(0, len(game_set))
+    i = r.randint(0, len(game_set) - 1)
     c1 = game_set[i]
     game_set.pop(i)
     
-    i = r.randint(0, len(game_set))
+    i = r.randint(0, len(game_set) - 1)
     c2 = game_set[i]
     game_set.pop(i)
     
@@ -54,6 +58,25 @@ def deal_hand(id):
     
     score_hand(id)
 
+
+
+def display(id):
+    print(f"You are currently holding onto")
+    for i in range(1, len(players[id])):
+        i = "c" + str(i) # Check dictionary column
+        print(f"{players[id][i]}")
+    print(f"Giving you a total hand value of {players[id]['score']}")
+    
+    # Check for Dealer 21
+    if (players[-1]["score"] == 21):
+        print(f"The dealer is showing {players[-1]['c1']}")
+    elif (players[-1]['c1'] in ('10', 'J', 'Q', 'K', 'A')):
+        print(f"While the dealer is currently showing a {players[-1]['c1']} but doesn't have Blackjack")
+    else:
+        print(f"While the dealer is currently showing a {players[-1]['c1']}")
+
 player = 1
-deal_hand(1)
-print(players[1])
+dealer = -1 # Dealer will always be -1
+deal_hand(player)
+deal_hand(dealer)
+display(player)
