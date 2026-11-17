@@ -105,7 +105,36 @@ def hit(id):
 
 
 
+def dealer_finish():
+    print("The dealer is holding")
+    for i in range(1, len(players[-1])):
+        print(players[-1]["c" + str(i)])
+    print(f"Which holds a score of {players[-1]['score']}")
+    
+    
+    while (players[-1]['score'] < 17):
+        i = r.randint(0, len(game_set) - 1)
+        c = game_set[i]
+        game_set.pop(i)
+            
+        print(f"The dealer has drawn a {c}")
+            
+        j = "c" + str(len(players[-1]))
+        players[-1][j] = c
+            
+        score_hand(-1)
+        
+        print("The dealer is holding")
+        for i in range(1, len(players[-1])):
+            print(players[-1]["c" + str(i)])
+        print(f"Which holds a score of {players[-1]['score']}")
+    
+
+    
+    
+    
 def action_input(id):
+    global alive
     display(id)
     print("What would you like to do:")
     print("1. Hit")
@@ -115,9 +144,11 @@ def action_input(id):
     
     if (action.strip().lower() in ('1', '1.', 'h', 'hit')):
         hit(id)
-        if alive:
-            display(id)
-
+    elif (action.strip().lower() in ('2', '2.', 's', 'stay')):
+        alive = False # This just prevents the loop from continuing forever
+        print(f"You are sticking with a score of {players[id]['score']}")
+        dealer_finish()
+    
 player = 1
 dealer = -1 # Dealer will always be -1
 deal_hand(player)
