@@ -105,7 +105,7 @@ def hit(id):
 
 
 
-def dealer_finish():
+def dealer_finish(id):
     print("The dealer is holding")
     for i in range(1, len(players[-1])):
         print(players[-1]["c" + str(i)])
@@ -128,8 +128,24 @@ def dealer_finish():
         for i in range(1, len(players[-1])):
             print(players[-1]["c" + str(i)])
         print(f"Which holds a score of {players[-1]['score']}")
+    win_check(id)
+
     
 
+def win_check(id):
+    player_score = players[id]['score']
+    dealer_score = players[-1]['score']
+    
+    if (dealer_score > 21):
+        print(f"The dealer has gone bust with {dealer_score}, you win!")
+        return
+    
+    if (player_score == dealer_score):
+        print(f"As you and the dealer both have a score of {player_score}, this game is a push and you receive your bet back")
+    elif (player_score > dealer_score):
+        print(f"You have beaten the dealer!")
+    elif (player_score < dealer_score):
+        print(f"You've lost to the dealer and lost your bet")
     
     
     
@@ -147,7 +163,7 @@ def action_input(id):
     elif (action.strip().lower() in ('2', '2.', 's', 'stay')):
         alive = False # This just prevents the loop from continuing forever
         print(f"You are sticking with a score of {players[id]['score']}")
-        dealer_finish()
+        dealer_finish(id)
     
 player = 1
 dealer = -1 # Dealer will always be -1
