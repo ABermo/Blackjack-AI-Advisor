@@ -1,4 +1,5 @@
 import random as r
+import blackjack_ai as ai
 
 BASE_CARDS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'] * 4
 
@@ -155,6 +156,11 @@ def action_input(id):
     print("What would you like to do:")
     print("1. Hit")
     print("2. Stick")
+    
+    ai.players_take_in(players)
+    ai.remove_seen_cards(id)
+    ai.hit_winning_probability(id)
+    ai.stay_winning_probability(id)
     
     action = input()
     
