@@ -1,3 +1,6 @@
+from functools import lru_cache
+
+
 # I have to regenerate the list as the one in blackjack.py contains hidden information (dealer's second card)
 BASE_CARDS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'] * 4
 game_set = BASE_CARDS.copy()
@@ -102,19 +105,20 @@ def dealer_hitting_probability():
         go_bust = 0
 
     survive = 1 - (force_hit * go_bust)
-    print(f"You should expect the dealer to be forced to hit {force_hit:.2%} of the time")
-    print(f"When hitting you should expect the dealer to go bust {go_bust:.2%} of the time")
+    #print(f"You should expect the dealer to be forced to hit {force_hit:.2%} of the time")
+    #print(f"When hitting you should expect the dealer to go bust {go_bust:.2%} of the time")
     
-    print(f"Therefore you should expect the dealer to survive {survive:.2%} of the time")
+    #print(f"Therefore you should expect the dealer to survive {survive:.2%} of the time")
+    return survive
     
 
-
+@lru_cache(maxsize=None)
 def dealer_hitting_survivability(score, aces):
     survived = 0
     total = 0
     
     for card in game_set:
-        curr_ace = aces
+        curr_aces = aces
         if card == 'A':
             curr_aces += 1
             
@@ -202,7 +206,7 @@ def hit_winning_probability(id):
         player_score = aces_score(current_score + VALUES[card], curr_aces)
 
         if player_score > 21:
-            losses += 1
+            losses += total
         else:
             for hidden_card in game_set:
                 curr_dealer_aces = dealer_aces
@@ -229,15 +233,41 @@ def hit_winning_probability(id):
     draws /= total_outcomes
     losses /= total_outcomes
 
-    print(f"You have a {wins:.2%} chance of winning")
-    print(f"You have a {draws:.2%} chance of drawing")
-    print(f"You have a {losses:.2%} chance of losing")
+    print(f"You have a {wins:.2%} chance of winning if you hit")
+    print(f"You have a {draws:.2%} chance of drawing if you hit")
+    print(f"You have a {losses:.2%} chance of losing if you hit")
 
 
+
+def stay_winning_probability(id):
+    curr_score = players[id]['score']
+    dealer_score = players[-1]['score']
+
+    if (curr_score == 21):
+        if (dealer_score == 21):
+            print("You both have 21, so its a tie")
+        else:
+            print("You have a {1:.0%} chance of winning if you stay")
+            print("You have a {0:.0%} chance of losing if you stay")
+
+    elif (curr_score < 21):
+        dealer_survive = dealer_hitting_probability()
+        dealer_bust = 1 - dealer_survive
+
+        if (curr_score < 17):
+            wins = dealer_bust
+        else:
+            wins = dealer_bust
+
+        loses = dealer_survive
+        print(f"You have a {wins:.2%} chance of winning if you stay")
+        print(f"You have a {loses:.2%} chance of losing if you stay")
+    
 # Preset for testing, will be removed once linked with blackjack.py
-players[1] = {'score': 21, 'c1': 'A', 'c2': 'K'}
-players[-1] = {'score': 12, 'c1': '10', 'c2': '4'}
+players[1] = {'score': 12, 'c1': '10', 'c2': '2'}
+players[-1] = {'score': 19, 'c1': '9', 'c2': '10'}
 
 remove_seen_cards(1)
 
 hit_winning_probability(1)
+stay_winning_probability(1)
