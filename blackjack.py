@@ -164,7 +164,8 @@ def action_input(id):
         alive = False # This just prevents the loop from continuing forever
         print(f"You are sticking with a score of {players[id]['score']}")
         dealer_finish(id)
-    
+        
+        
 player = 1
 dealer = -1 # Dealer will always be -1
 deal_hand(player)
