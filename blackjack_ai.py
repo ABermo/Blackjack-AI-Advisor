@@ -21,6 +21,13 @@ VALUES = {
 
 players = {}
 
+def aces_score(score, aces):
+    while (score > 21 and aces > 0):
+        aces -= 1
+        score -= 10
+    
+    return score
+
 
 def remove_seen_cards(id):
     for i in range(1,len(players[id])):
@@ -35,11 +42,26 @@ def remove_seen_cards(id):
 def survivability(id):
     current_score = players[id]['score']
     
+    aces = 0
+    if (players[id]['c1'] == 'A'):
+        aces += 1
+    if (players[id]['c2'] == 'A'):
+        aces += 1
+        
     survived = 0
     total = 0
     
     for card in game_set:
-        if (current_score + VALUES[card]) <= 21:
+        curr_aces = aces
+        curr_score = current_score + VALUES[card]
+        
+        if card == 'A':
+            curr_aces += 1
+        
+        if ((curr_score > 21) and aces > 0):
+            curr_score = aces_score(current_score + VALUES[card], aces)
+            
+        if (curr_score) <= 21:
             survived += 1
         
         total += 1
@@ -54,13 +76,21 @@ def dealer_hitting_probability():
     hits = 0
     total = 0
     survive_chance = 0
+    aces = 0
+    
+    if (players[-1]['c1'] == 'A'):
+        aces += 1
     
     for card in game_set:
+        curr_aces = aces
+        if card == 'A':
+            curr_aces += 1
+            
         if ((current_score + VALUES[card]) <= 16):
             hits += 1
             
             # Put inside the If statement as dealer don't hit if has a value of 17 or more
-            survive_chance += dealer_hitting_survivability(current_score + VALUES[card])
+            survive_chance += dealer_hitting_survivability(current_score + VALUES[card], curr_aces)
         
         total += 1
     
@@ -79,12 +109,22 @@ def dealer_hitting_probability():
     
 
 
-def dealer_hitting_survivability(score):
+def dealer_hitting_survivability(score, aces):
     survived = 0
     total = 0
     
     for card in game_set:
-        if ((score + VALUES[card]) < 22):
+        if card == 'A':
+            aces += 1
+            
+        current_score = score + VALUES[card]
+        if (current_score > 21 and aces > 0):
+            current_score = aces_score(current_score, aces)
+            aces -= 1
+            
+        if (current_score < 17):
+            survived += dealer_hitting_survivability(current_score, aces)
+        elif (current_score < 22):
             survived += 1
         
         total += 1
@@ -92,8 +132,8 @@ def dealer_hitting_survivability(score):
     return (survived/total)
         
 # Preset for testing, will be removed once linked with blackjack.py
-players[1] = {'score': 15, 'c1': '10', 'c2': '5'}
-players[-1] = {'score': 12, 'c1': '6', 'c2': '4'}
+players[1] = {'score': 15, 'c1': 'A', 'c2': 'A'}
+players[-1] = {'score': 12, 'c1': '10', 'c2': '4'}
 
 remove_seen_cards(1)
 survivability(1)
