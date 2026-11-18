@@ -53,19 +53,47 @@ def dealer_hitting_probability():
     
     hits = 0
     total = 0
+    survive_chance = 0
     
     for card in game_set:
-        if (current_score + VALUES[card] <= 16):
+        if ((current_score + VALUES[card]) <= 16):
             hits += 1
+            
+            # Put inside the If statement as dealer don't hit if has a value of 17 or more
+            survive_chance += dealer_hitting_survivability(current_score + VALUES[card])
         
         total += 1
-
     
-    print(f"You should expect the dealer to be forced to hit {hits/total:.2%} of the time")
+    force_hit = hits/total
+    
+    if hits > 0:
+        go_bust = 1 - (survive_chance / hits)
+    else:
+        go_bust = 0
+
+    survive = 1 - (force_hit * go_bust)
+    print(f"You should expect the dealer to be forced to hit {force_hit:.2%} of the time")
+    print(f"When hitting you should expect the dealer to go bust {go_bust:.2%} of the time")
+    
+    print(f"Therefore you should expect the dealer to survive {survive:.2%} of the time")
     
 
+
+def dealer_hitting_survivability(score):
+    survived = 0
+    total = 0
+    
+    for card in game_set:
+        if ((score + VALUES[card]) < 22):
+            survived += 1
+        
+        total += 1
+    
+    return (survived/total)
+        
+# Preset for testing, will be removed once linked with blackjack.py
 players[1] = {'score': 15, 'c1': '10', 'c2': '5'}
-players[-1] = {'score': 12, 'c1': '8', 'c2': '4'}
+players[-1] = {'score': 12, 'c1': '6', 'c2': '4'}
 
 remove_seen_cards(1)
 survivability(1)
