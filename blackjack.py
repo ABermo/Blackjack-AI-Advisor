@@ -1,5 +1,6 @@
 import random as r
 import blackjack_ai as ai
+import time as t
 
 BASE_CARDS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'] * 4
 
@@ -66,8 +67,10 @@ def display(id):
     print(f"You are currently holding onto")
     for i in range(1, len(players[id])):
         i = "c" + str(i) # Check dictionary column
-        print(f"{players[id][i]}")
-    print(f"Giving you a total hand value of {players[id]['score']}")
+        print(f"{players[id][i]} ", end='')
+        t.sleep(0.5)
+    print(f"\nGiving you a total hand value of {players[id]['score']}")
+    t.sleep(0.5)
     
     # Check for Dealer 21
     if (players[-1]["score"] == 21):
@@ -153,15 +156,20 @@ def win_check(id):
 def action_input(id):
     global alive
     display(id)
+    t.sleep(0.5)
     print("What would you like to do:")
+    t.sleep(0.5)
     print("1. Hit")
+    t.sleep(0.5)
     print("2. Stick")
     
     ai.players_take_in(players)
     ai.remove_seen_cards(id)
+    t.sleep(0.5)
     hw, ht, hl = ai.hit_winning_probability(id)
+    t.sleep(0.5)
     sw, st, sl = ai.stay_winning_probability(id)
-    
+    t.sleep(0.5)
     advice(hw, hl, sw, sl)
     action = input()
     
@@ -171,7 +179,7 @@ def action_input(id):
         alive = False # This just prevents the loop from continuing forever
         print(f"You are sticking with a score of {players[id]['score']}")
         dealer_finish(id)
-        
+
 
 
 def advice(hw, hl, sw, sl):

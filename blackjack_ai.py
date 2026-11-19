@@ -143,7 +143,7 @@ def hit_winning_probability(id):
         draws += d * chance
         losses += l * chance
     
-    print(f"If you hit: \nWin:{wins:.2%}\tDraw:{draws:.2%}\tLose{losses:.2%}")
+    print(f"If you hit: \nWin:{wins:.2%}\tDraw:{draws:.2%}\tLose:{losses:.2%}")
     
     return wins, draws, losses
 
@@ -155,6 +155,6 @@ def stay_winning_probability(id):
     
     wins, draws, losses = outcome(current_score, dealer_chances)
     
-    print(f"If you stay: \nWin:{wins:.2%}\tDraw:{draws:.2%}\tLose{losses:.2%}")
+    print(f"If you stay: \nWin:{wins:.2%}\tDraw:{draws:.2%}\tLose:{losses:.2%}")
     
     return wins, draws, losses
