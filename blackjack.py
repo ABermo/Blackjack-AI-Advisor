@@ -64,6 +64,7 @@ def deal_hand(id):
 
 
 def display(id):
+    global alive
     print(f"You are currently holding onto")
     for i in range(1, len(players[id])):
         i = "c" + str(i) # Check dictionary column
@@ -75,6 +76,11 @@ def display(id):
     # Check for Dealer 21
     if (players[-1]["score"] == 21):
         print(f"The dealer is showing {players[-1]['c1']}")
+        t.sleep(0.1)
+        print("...")
+        t.sleep(0.1)
+        print("The dealer has blackjack, this is an automatic lose")
+        alive = False
     elif (players[-1]['c1'] in ('10', 'J', 'Q', 'K', 'A')):
         print(f"While the dealer is currently showing a {players[-1]['c1']} but doesn't have Blackjack")
     else:
@@ -97,6 +103,7 @@ def hit(id):
     c = game_set[i]
     game_set.pop(i)
     
+    t.sleep(0.5)
     print(f"You have a drawn a {c}")
     
     j = "c" + str(len(players[id]))
@@ -104,6 +111,7 @@ def hit(id):
     
     score_hand(id)
     
+    t.sleep(0.5)
     print(f"This now puts your score at {players[id]['score']}")
     bust_check(id)
 
@@ -111,16 +119,19 @@ def hit(id):
 
 def dealer_finish(id):
     print("The dealer is holding")
+    t.sleep(0.5)
     for i in range(1, len(players[-1])):
-        print(players[-1]["c" + str(i)])
-    print(f"Which holds a score of {players[-1]['score']}")
+        print(players[-1]["c" + str(i)] + " ", end='')
+        t.sleep(0.5)
+    print(f"\nWhich holds a score of {players[-1]['score']}")
     
     
     while (players[-1]['score'] < 17):
         i = r.randint(0, len(game_set) - 1)
         c = game_set[i]
         game_set.pop(i)
-            
+        
+        t.sleep(0.5)
         print(f"The dealer has drawn a {c}")
             
         j = "c" + str(len(players[-1]))
@@ -128,10 +139,13 @@ def dealer_finish(id):
             
         score_hand(-1)
         
+        t.sleep(0.5)
         print("The dealer is holding")
         for i in range(1, len(players[-1])):
-            print(players[-1]["c" + str(i)])
-        print(f"Which holds a score of {players[-1]['score']}")
+            t.sleep(0.25)
+            print(players[-1]["c" + str(i)] + " ", end = '')
+            t.sleep(0.5)
+        print(f"\nWhich holds a score of {players[-1]['score']}")
     win_check(id)
 
     
@@ -140,6 +154,7 @@ def win_check(id):
     player_score = players[id]['score']
     dealer_score = players[-1]['score']
     
+    t.sleep(0.5)
     if (dealer_score > 21):
         print(f"The dealer has gone bust with {dealer_score}, you win!")
         return
