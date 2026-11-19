@@ -159,9 +159,10 @@ def action_input(id):
     
     ai.players_take_in(players)
     ai.remove_seen_cards(id)
-    ai.hit_winning_probability(id)
-    ai.stay_winning_probability(id)
+    hw, ht, hl = ai.hit_winning_probability(id)
+    sw, st, sl = ai.stay_winning_probability(id)
     
+    advice(hw, hl, sw, sl)
     action = input()
     
     if (action.strip().lower() in ('1', '1.', 'h', 'hit')):
@@ -171,7 +172,23 @@ def action_input(id):
         print(f"You are sticking with a score of {players[id]['score']}")
         dealer_finish(id)
         
-        
+
+
+def advice(hw, hl, sw, sl):
+    if (hw > sw):
+        if (hl > sl):
+            print("Looking at the numbers, you have greater odds of winning but also greater odds of losing if you decide to hit")
+            print("I'd recommend that if you're here to gamble, take the hit and play the odds")
+        elif (hl < sl):
+            print("Your winning odds are better and your losing odds are less if you hit, to me its a no brainer, Hit")
+        else:
+            print("You've greater odds of winning when you hit and it doesn't affect your losing odds, so I'd advise you to Hit")
+    elif (sw > hw):
+        if (hl > sl):
+            print("Your winning odds are better and your losing odds are less if you stay, to me its a no brainer, Stay")
+        elif (hl < sl):
+            print("Looking at the numbers, you have greater odds of winning but also greater odds of losing if you decide to stay")
+            
 player = 1
 dealer = -1 # Dealer will always be -1
 deal_hand(player)
